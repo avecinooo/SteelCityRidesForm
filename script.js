@@ -1,4 +1,3 @@
-
 const roomNames = {
     1: "DISC MEMORY",
     2: "SIMON SAYS",
@@ -86,6 +85,11 @@ function enterRoom(roomNumber) {
     clearInterval(timerInterval);
 
     timerInterval = setInterval(() => {
+
+        if (currentRoom === null || roomStartTime === null) {
+            return;
+        }
+
         const elapsed = Date.now() - roomStartTime;
 
         document.getElementById("room-timer").textContent =
@@ -624,22 +628,22 @@ function initializeTeamConnections() {
     const categories = [
         {
             name: "ROOKIES",
-            difficulty: "EASY",
+            difficulty: "YELLOW",
             members: ["COOPER", "LEO", "BILLY", "LOUIS"]
         },
         {
             name: "NICKNAMES",
-            difficulty: "EASY / MEDIUM",
+            difficulty: "GREEN",
             members: ["POOKIE", "STICK", "MUFF", "CHRISPY"]
         },
         {
             name: "SCAV HUNT TOP SCORERS",
-            difficulty: "MEDIUM / HARD",
+            difficulty: "BLUE",
             members: ["TATE", "LINK", "TREVOR", "TOMMY"]
         },
         {
             name: "4 ABSENCES",
-            difficulty: "HARD",
+            difficulty: "PURPLE",
             members: ["CARTER", "MICHAEL", "KAI", "TRENT"]
         }
     ];
@@ -1023,24 +1027,72 @@ function initializeTeamConnections() {
     }
 
 
-    // COMPLETE THE GAME
+    // COMPLETE THE GAME AND SHOW RESULTS
     function finishConnections() {
 
+        // Capture the final time before stopping the timer
         const elapsed = Date.now() - roomStartTime;
 
+        // Save the room time and stop the timer.
+        // The true argument keeps the player on this screen.
+        completeRoom(elapsed, true);
+
+        // Build the completed category results
+        const completedCategories = solvedCategories.map(index => {
+
+            const category = categories[index];
+
+            return `
+                <div class="solved-category solved-category-${index + 1}">
+                    <strong>${category.name}</strong>
+                    <span>${category.members.join(" · ")}</span>
+                </div>
+            `;
+        }).join("");
+
+        // Display the Connections results instead of returning to the menu
         roomContent.innerHTML = `
-            <div class="memory-complete">
+            <div class="connections-results">
+
                 <h2>ROOM 03 COMPLETE!</h2>
 
-                <p>You successfully found all four categories.</p>
+                <p class="connections-results-intro">
+                    You successfully found all four hidden categories.
+                </p>
 
-                <p>Incorrect guesses: ${mistakes} / 4</p>
+                <div class="connections-result-stat">
+                    <span>YOUR CONNECTIONS TIME</span>
+                    <strong>${formatTime(elapsed)}</strong>
+                </div>
 
-                <p>Returning to room selection...</p>
+                <div class="connections-result-stat">
+                    <span>INCORRECT GUESSES</span>
+                    <strong>${mistakes} / ${maxMistakes}</strong>
+                </div>
+
+                <h3 class="results-heading">
+                    ALL FOUR CATEGORIES
+                </h3>
+
+                <div class="connections-results-categories">
+                    ${completedCategories}
+                </div>
+
+                <p class="connections-results-message">
+                    Great work! Your Connections time has been saved
+                    and added to your overall time. Reviewing these
+                    results will not add any extra time.
+                </p>
+
+                <button
+                    class="connections-menu-button"
+                    onclick="returnToMenu()"
+                >
+                    BACK TO ROOMS
+                </button>
+
             </div>
         `;
-
-        completeRoom(elapsed);
     }
 
 
@@ -1059,7 +1111,7 @@ function initializeTeamConnections() {
 // COMPLETE A ROOM
 // ==========================================
 
-function completeRoom(completionTime) {
+function completeRoom(completionTime, stayOnRoom = false) {
 
     if (currentRoom === null) return;
 
@@ -1067,6 +1119,7 @@ function completeRoom(completionTime) {
         ? completionTime
         : Date.now() - roomStartTime;
 
+    // Save the completed room time
     roomTimes[currentRoom] = elapsed;
 
     sessionStorage.setItem(
@@ -1074,16 +1127,28 @@ function completeRoom(completionTime) {
         JSON.stringify(roomTimes)
     );
 
+    // Stop the timer immediately
     clearInterval(timerInterval);
+    timerInterval = null;
+
+    // Show the exact final time on the room screen
+    document.getElementById("room-timer").textContent =
+        formatTime(elapsed);
 
     currentRoom = null;
     roomStartTime = null;
 
     updateMenu();
 
-    setTimeout(() => {
-        returnToMenu();
-    }, 700);
+    // Connections stays on its results screen.
+    // Other rooms return to the menu as before.
+    if (!stayOnRoom) {
+
+        setTimeout(() => {
+            returnToMenu();
+        }, 700);
+
+    }
 }
 
 
