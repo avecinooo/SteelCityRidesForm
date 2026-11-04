@@ -119,6 +119,26 @@ h1 span {
     color: #a4d65e;
 }
 
+/* SKIP ACTIVITY LINK */
+
+.skip-activity-link {
+    display: inline-block;
+    margin: 0 auto 28px;
+    padding: 15px 20px;
+    border: 1px solid #71816f;
+    border-radius: 6px;
+    color: #a4d65e;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+}
+
+.skip-activity-link:hover {
+    background: #26372b;
+    border-color: #a4d65e;
+}
+
 /* OVERALL TIME */
 
 .total-time {
@@ -862,6 +882,8 @@ button:hover:not(:disabled) {
     display: none !important;
 }
 
+/* MOBILE */
+
 @media (max-width: 500px) {
 
     .memory-grid {
@@ -913,4 +935,5 @@ button:hover:not(:disabled) {
     .connections-results {
         padding: 22px 14px;
     }
+
 }
