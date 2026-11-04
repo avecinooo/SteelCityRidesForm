@@ -28,6 +28,7 @@
             to calculate your final time.
         </p>
 
+        <!-- ROOM SELECTION -->
         <div class="room-preview">
 
             <button class="room-button" id="room-button-1" onclick="enterRoom(1)">
@@ -50,11 +51,24 @@
 
         </div>
 
+        <!-- OPTION TO SKIP THE ACTIVITY -->
+        <a
+            href="YOUR_GOOGLE_FORM_URL"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="skip-activity-link"
+            style="display:inline-block; margin:0 auto 28px; padding:15px 20px; border:1px solid #71816f; border-radius:6px; color:#a4d65e; text-decoration:none; font-size:12px; font-weight:900; letter-spacing:1.5px;"
+        >
+            SKIP THE ACTIVITY? FILL OUT THE RIDE FORM
+        </a>
+
+        <!-- OVERALL TIME -->
         <div class="total-time">
             <span>OVERALL TIME</span>
             <strong id="total-time">00:00.000</strong>
         </div>
 
+        <!-- ESCAPE BUTTON -->
         <button id="escape-button" onclick="showResults()" disabled>
             ESCAPE
         </button>
@@ -93,7 +107,7 @@
     </section>
 
 
-    <!-- FINAL RESULTS AND RIDE SIGN-UP -->
+    <!-- FINAL RESULTS SCREEN -->
     <section id="results-screen" class="hidden">
 
         <div class="top-label">MISSION ACCOMPLISHED</div>
@@ -113,192 +127,23 @@
 
         <div class="results-list" id="results-list"></div>
 
-        <!-- RIDE SIGN-UP FORM -->
-        <div class="ride-signup">
-
-            <div class="signup-heading">
-                <div class="top-label">TRANSPORTATION</div>
-                <h2>RIDE SIGN-UP</h2>
-                <p>
-                    Help us coordinate transportation.
-                    Please provide your information below.
-                </p>
-            </div>
-
-            <form
-                id="ride-signup-form"
-                method="POST"
-                target="sheet-submit-frame"
-                action=""
-            >
-
-                <div class="form-group">
-                    <label for="signup-name">YOUR NAME</label>
-                    <input
-                        type="text"
-                        id="signup-name"
-                        name="name"
-                        placeholder="Enter your full name"
-                        autocomplete="name"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="signup-phone">PHONE NUMBER</label>
-                    <input
-                        type="tel"
-                        id="signup-phone"
-                        name="phone"
-                        placeholder="Enter your phone number"
-                        autocomplete="tel"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>CAN YOU DRIVE?</label>
-
-                    <div class="radio-options">
-                        <label class="choice-option">
-                            <input
-                                type="radio"
-                                name="canDrive"
-                                value="Yes"
-                                required
-                            >
-                            <span>YES</span>
-                        </label>
-
-                        <label class="choice-option">
-                            <input
-                                type="radio"
-                                name="canDrive"
-                                value="No"
-                                required
-                            >
-                            <span>NO</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- ONLY SHOWN IF THE PLAYER CAN DRIVE -->
-                <div class="form-group hidden" id="capacity-group">
-
-                    <label for="signup-capacity">
-                        HOW MANY PEOPLE CAN YOU TAKE?
-                    </label>
-
-                    <select
-                        id="signup-capacity"
-                        name="capacity"
-                    >
-                        <option value="">Select capacity</option>
-                        <option value="1">1 person</option>
-                        <option value="2">2 people</option>
-                        <option value="3">3 people</option>
-                        <option value="4">4 people</option>
-                        <option value="Other">Other</option>
-                    </select>
-
-                    <input
-                        type="text"
-                        id="signup-capacity-other"
-                        name="capacityOther"
-                        class="hidden other-capacity"
-                        placeholder="Please specify your capacity"
-                    >
-
-                </div>
-
-                <div class="form-group">
-
-                    <label>
-                        WHAT TIMES CAN YOU LEAVE?
-                    </label>
-
-                    <p class="field-description">
-                        Select all time windows that work for you.
-                    </p>
-
-                    <div class="checkbox-options">
-
-                        <label class="choice-option">
-                            <input
-                                type="checkbox"
-                                name="departureTimes"
-                                value="12 PM - 2 PM"
-                            >
-                            <span>12 PM – 2 PM</span>
-                        </label>
-
-                        <label class="choice-option">
-                            <input
-                                type="checkbox"
-                                name="departureTimes"
-                                value="2 PM - 4 PM"
-                            >
-                            <span>2 PM – 4 PM</span>
-                        </label>
-
-                        <label class="choice-option">
-                            <input
-                                type="checkbox"
-                                name="departureTimes"
-                                value="4 PM - 6 PM"
-                            >
-                            <span>4 PM – 6 PM</span>
-                        </label>
-
-                        <label class="choice-option">
-                            <input
-                                type="checkbox"
-                                name="departureTimes"
-                                value="6 PM - 7 PM"
-                            >
-                            <span>6 PM – 7 PM</span>
-                        </label>
-
-                        <label class="choice-option">
-                            <input
-                                type="checkbox"
-                                name="departureTimes"
-                                value="Later than 7 PM"
-                            >
-                            <span>Later than 7 PM</span>
-                        </label>
-
-                    </div>
-                </div>
-
-                <!-- OVERALL TIME IS ALSO SAVED WITH THE SIGN-UP -->
-                <input
-                    type="hidden"
-                    name="overallTime"
-                    id="signup-overall-time"
-                >
-
-                <button
-                    type="submit"
-                    id="signup-submit"
-                    class="signup-submit"
-                >
-                    SUBMIT RIDE SIGN-UP
-                </button>
-
-                <p id="signup-message" class="signup-message" aria-live="polite"></p>
-
-            </form>
-
-            <!-- Hidden destination for the Google Apps Script response -->
-            <iframe
-                name="sheet-submit-frame"
-                id="sheet-submit-frame"
-                class="hidden-submit-frame"
-                title="Form submission"
-            ></iframe>
-
+        <div class="leaderboard">
+            <h2>LEADERBOARD</h2>
+            <p>
+                Submit your score to join the competition!
+                Rankings will be available as scores are collected.
+            </p>
         </div>
+
+        <a
+            id="google-form-link"
+            href="YOUR_GOOGLE_FORM_URL"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="form-link"
+        >
+            SUBMIT YOUR SCORE
+        </a>
 
         <button class="secondary-button" onclick="returnToMenu()">
             BACK TO HOME
