@@ -372,6 +372,45 @@ button:hover:not(:disabled) {
     margin: 35px 0;
 }
 
+.leaderboard {
+    background: #1b2820;
+    border: 1px solid #344538;
+    border-radius: 8px;
+    padding: 25px;
+    margin: 35px auto;
+    max-width: 450px;
+}
+
+.leaderboard h2 {
+    color: #a4d65e;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.leaderboard p {
+    color: #c5cec7;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.form-link {
+    display: block;
+    max-width: 300px;
+    margin: 20px auto;
+    padding: 17px;
+    background: #a4d65e;
+    color: #101713;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.form-link:hover {
+    background: #c1ed7d;
+}
+
 /* INSTRUCTIONS MODAL */
 
 .modal {
@@ -518,7 +557,9 @@ button:hover:not(:disabled) {
     cursor: not-allowed;
 }
 
-/* ROOM 3: TEAM CONNECTIONS */
+/* ==========================================
+   ROOM 3: TEAM CONNECTIONS
+========================================== */
 
 .connections-panel {
     max-width: 560px;
@@ -581,6 +622,13 @@ button:hover:not(:disabled) {
     font-weight: bold;
     letter-spacing: 1px;
 }
+
+/* CATEGORY DIFFICULTY COLORS
+   1 = Yellow (easiest)
+   2 = Green
+   3 = Blue
+   4 = Purple (hardest)
+*/
 
 .solved-category-1 {
     background: #f9df78;
@@ -808,173 +856,6 @@ button:hover:not(:disabled) {
     margin: 10px auto 0;
 }
 
-/* ==========================================
-   RIDE SIGN-UP FORM
-========================================== */
-
-.ride-signup {
-    width: 100%;
-    max-width: 500px;
-    margin: 45px auto 30px;
-    padding: 30px;
-    background: #1b2820;
-    border: 1px solid #344538;
-    border-radius: 10px;
-    text-align: left;
-}
-
-.signup-heading {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.signup-heading .top-label {
-    margin-bottom: 12px;
-}
-
-.signup-heading h2 {
-    color: #a4d65e;
-    font-size: 28px;
-    letter-spacing: 2px;
-    margin-bottom: 12px;
-}
-
-.signup-heading p {
-    color: #b5c0b8;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.form-group {
-    margin-bottom: 25px;
-}
-
-.form-group > label:first-child {
-    display: block;
-    color: #a4d65e;
-    font-size: 12px;
-    font-weight: bold;
-    letter-spacing: 1.5px;
-    margin-bottom: 12px;
-}
-
-.form-group input[type="text"],
-.form-group input[type="tel"],
-.form-group select {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #50634e;
-    border-radius: 6px;
-    background: #101713;
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px;
-    outline: none;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    border-color: #a4d65e;
-}
-
-.form-group input::placeholder {
-    color: #71816f;
-}
-
-.form-group select {
-    cursor: pointer;
-}
-
-.radio-options,
-.checkbox-options {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-}
-
-.choice-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 14px;
-    background: #26372b;
-    border: 1px solid #344538;
-    border-radius: 6px;
-    color: #e0e9e2;
-    font-size: 14px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.choice-option:hover {
-    border-color: #a4d65e;
-    background: #304434;
-}
-
-.choice-option input {
-    width: 17px;
-    height: 17px;
-    accent-color: #a4d65e;
-    cursor: pointer;
-    flex-shrink: 0;
-}
-
-.choice-option:has(input:checked) {
-    border-color: #a4d65e;
-    background: #304434;
-}
-
-.field-description {
-    color: #829083;
-    font-size: 12px;
-    margin: -4px 0 12px;
-    line-height: 1.5;
-}
-
-.other-capacity {
-    margin-top: 12px;
-}
-
-.signup-submit {
-    display: block;
-    width: 100%;
-    margin-top: 30px;
-    padding: 18px;
-    font-size: 13px;
-    letter-spacing: 2px;
-}
-
-.signup-submit:disabled {
-    background: #344538;
-    color: #829083;
-    cursor: not-allowed;
-}
-
-.signup-message {
-    min-height: 22px;
-    margin-top: 16px;
-    text-align: center;
-    color: #c5cec7;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-.signup-message.success {
-    color: #a4d65e;
-}
-
-.signup-message.error {
-    color: #e18b8b;
-}
-
-.hidden-submit-frame {
-    display: none;
-    width: 0;
-    height: 0;
-    border: 0;
-}
-
 /* GENERAL */
 
 .hidden {
@@ -982,10 +863,6 @@ button:hover:not(:disabled) {
 }
 
 @media (max-width: 500px) {
-
-    body {
-        padding: 20px;
-    }
 
     .memory-grid {
         gap: 7px;
@@ -1035,13 +912,5 @@ button:hover:not(:disabled) {
 
     .connections-results {
         padding: 22px 14px;
-    }
-
-    .ride-signup {
-        padding: 22px 16px;
-    }
-
-    .signup-heading h2 {
-        font-size: 24px;
     }
 }
