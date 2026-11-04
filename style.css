@@ -67,7 +67,7 @@ h1 span {
 
 .room-preview {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 14px;
     margin: 0 auto 30px;
     max-width: 550px;
@@ -863,10 +863,6 @@ button:hover:not(:disabled) {
 }
 
 @media (max-width: 500px) {
-
-    .room-preview {
-        grid-template-columns: 1fr;
-    }
 
     .memory-grid {
         gap: 7px;
