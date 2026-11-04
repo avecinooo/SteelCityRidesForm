@@ -1,3 +1,4 @@
+
 const roomNames = {
     1: "DISC MEMORY",
     2: "SIMON SAYS",
@@ -47,12 +48,10 @@ function shuffleArray(array) {
 // ENTER A ROOM
 function enterRoom(roomNumber) {
 
-    // Prevent replaying completed rooms
     if (roomTimes[roomNumber] !== undefined) {
         return;
     }
 
-    // Don't allow switching rooms during an active challenge
     if (currentRoom !== null) {
         return;
     }
@@ -73,17 +72,17 @@ function enterRoom(roomNumber) {
     document.getElementById("room-timer").textContent =
         "00:00.000";
 
-    // Load the correct game
     if (roomNumber === 1) {
         initializeDiscMemory();
     } else if (roomNumber === 2) {
         initializeSimonSays();
+    } else if (roomNumber === 3) {
+        initializeTeamConnections();
     } else {
         document.getElementById("room-content").innerHTML =
             "<p>This challenge is coming soon!</p>";
     }
 
-    // Start stopwatch
     clearInterval(timerInterval);
 
     timerInterval = setInterval(() => {
@@ -113,7 +112,6 @@ function initializeDiscMemory() {
         "BOX"
     ];
 
-    // Create two copies of every word
     const cards = shuffleArray([...words, ...words]);
 
     let firstCard = null;
@@ -125,7 +123,6 @@ function initializeDiscMemory() {
 
     const roomContent = document.getElementById("room-content");
 
-    // Create game layout
     roomContent.innerHTML = `
         <p class="memory-instructions">
             Turn over two boxes at a time.
@@ -142,7 +139,6 @@ function initializeDiscMemory() {
 
     const memoryGrid = document.getElementById("memory-grid");
 
-    // Generate all 16 cards
     cards.forEach((word) => {
 
         const card = document.createElement("button");
@@ -163,13 +159,10 @@ function initializeDiscMemory() {
     });
 
 
-    // FLIP A CARD
     function flipCard(card) {
 
-        // Ignore clicks if the board is locked
         if (lockBoard) return;
 
-        // Ignore already flipped or matched cards
         if (
             card.classList.contains("flipped") ||
             card.classList.contains("matched")
@@ -179,13 +172,11 @@ function initializeDiscMemory() {
 
         card.classList.add("flipped");
 
-        // First card selected
         if (firstCard === null) {
             firstCard = card;
             return;
         }
 
-        // Second card selected
         secondCard = card;
 
         moves++;
@@ -197,7 +188,6 @@ function initializeDiscMemory() {
     }
 
 
-    // CHECK WHETHER TWO CARDS MATCH
     function checkMatch() {
 
         const isMatch =
@@ -211,7 +201,6 @@ function initializeDiscMemory() {
     }
 
 
-    // CORRECT MATCH
     function handleMatch() {
 
         firstCard.classList.add("matched");
@@ -227,14 +216,12 @@ function initializeDiscMemory() {
 
         resetTurn();
 
-        // Check whether all eight pairs are matched
         if (matches === 8) {
             finishDiscMemory();
         }
     }
 
 
-    // INCORRECT MATCH
     function handleMismatch() {
 
         lockBoard = true;
@@ -250,7 +237,6 @@ function initializeDiscMemory() {
     }
 
 
-    // RESET TURN
     function resetTurn() {
 
         firstCard = null;
@@ -259,7 +245,6 @@ function initializeDiscMemory() {
     }
 
 
-    // COMPLETE THE GAME
     function finishDiscMemory() {
 
         roomContent.innerHTML = `
@@ -302,7 +287,6 @@ function initializeSimonSays() {
 
     const roomContent = document.getElementById("room-content");
 
-    // CREATE GAME LAYOUT
     roomContent.innerHTML = `
         <div class="simon-panel">
 
@@ -322,35 +306,19 @@ function initializeSimonSays() {
 
             <div class="simon-grid">
 
-                <button
-                    class="simon-button"
-                    data-action="CUT"
-                    disabled
-                >
+                <button class="simon-button" data-action="CUT" disabled>
                     CUT
                 </button>
 
-                <button
-                    class="simon-button"
-                    data-action="DUMP"
-                    disabled
-                >
+                <button class="simon-button" data-action="DUMP" disabled>
                     DUMP
                 </button>
 
-                <button
-                    class="simon-button"
-                    data-action="SWING"
-                    disabled
-                >
+                <button class="simon-button" data-action="SWING" disabled>
                     SWING
                 </button>
 
-                <button
-                    class="simon-button"
-                    data-action="HUCK"
-                    disabled
-                >
+                <button class="simon-button" data-action="HUCK" disabled>
                     HUCK
                 </button>
 
@@ -377,14 +345,12 @@ function initializeSimonSays() {
     const startButton = document.getElementById("simon-start");
 
 
-    // UPDATE STATUS MESSAGE
     function setStatus(message) {
         document.getElementById("simon-status").textContent =
             message;
     }
 
 
-    // UPDATE BUTTON AVAILABILITY
     function setButtonsEnabled(enabled) {
 
         simonButtons.forEach(button => {
@@ -393,7 +359,6 @@ function initializeSimonSays() {
     }
 
 
-    // CLEAR ALL PENDING PLAYBACK
     function clearPlayback() {
 
         playbackTimeouts.forEach(timeout => {
@@ -408,7 +373,6 @@ function initializeSimonSays() {
     }
 
 
-    // FLASH AN ACTION BUTTON
     function flashAction(action, duration) {
 
         const button = document.querySelector(
@@ -427,7 +391,6 @@ function initializeSimonSays() {
     }
 
 
-    // ADD A RANDOM ACTION TO THE SEQUENCE
     function addToSequence() {
 
         const randomAction =
@@ -437,7 +400,6 @@ function initializeSimonSays() {
     }
 
 
-    // PLAY THE SEQUENCE
     function playSequence() {
 
         clearPlayback();
@@ -454,7 +416,6 @@ function initializeSimonSays() {
         document.getElementById("simon-round").textContent =
             `ROUND ${currentRound} OF 7`;
 
-        // Faster playback, with each round getting progressively quicker
         const flashDuration =
             Math.max(250, 550 - currentRound * 35);
 
@@ -467,7 +428,6 @@ function initializeSimonSays() {
 
             if (index >= sequence.length) {
 
-                // Sequence has finished
                 const finishTimeout = setTimeout(() => {
 
                     acceptingInput = true;
@@ -499,7 +459,6 @@ function initializeSimonSays() {
             playbackTimeouts.push(nextTimeout);
         }
 
-        // Small delay before sequence begins
         const initialTimeout = setTimeout(() => {
             playNextAction();
         }, 600);
@@ -508,7 +467,6 @@ function initializeSimonSays() {
     }
 
 
-    // HANDLE PLAYER CLICK
     function handlePlayerInput(action) {
 
         if (!acceptingInput) return;
@@ -517,14 +475,12 @@ function initializeSimonSays() {
 
         const expectedAction = sequence[playerPosition];
 
-        // Correct action
         if (action === expectedAction) {
 
             flashAction(action, 180);
 
             playerPosition++;
 
-            // Player completed the current sequence
             if (playerPosition === sequence.length) {
 
                 acceptingInput = false;
@@ -533,7 +489,6 @@ function initializeSimonSays() {
                 document.getElementById("simon-progress").textContent =
                     `${currentRound} / 7 ROUNDS`;
 
-                // Final round completed
                 if (currentRound === 7) {
 
                     finishSimonSays();
@@ -553,7 +508,6 @@ function initializeSimonSays() {
 
         } else {
 
-            // Incorrect action
             mistakes++;
 
             document.getElementById("simon-mistakes").textContent =
@@ -567,8 +521,6 @@ function initializeSimonSays() {
 
             setStatus("INCORRECT! WATCH THE SEQUENCE AGAIN.");
 
-            // Replay the SAME sequence.
-            // Completed rounds are not lost.
             const retryTimeout = setTimeout(() => {
                 playSequence();
             }, 900);
@@ -578,7 +530,6 @@ function initializeSimonSays() {
     }
 
 
-    // FINISH SIMON SAYS
     function finishSimonSays() {
 
         acceptingInput = false;
@@ -607,7 +558,6 @@ function initializeSimonSays() {
     }
 
 
-    // CONNECT THE FOUR ACTION BUTTONS
     simonButtons.forEach(button => {
 
         button.addEventListener("click", () => {
@@ -621,12 +571,10 @@ function initializeSimonSays() {
     });
 
 
-    // START / REPLAY / NEXT ROUND BUTTON
     startButton.addEventListener("click", () => {
 
         if (startButton.disabled) return;
 
-        // First round
         if (!gameStarted) {
 
             gameStarted = true;
@@ -640,7 +588,6 @@ function initializeSimonSays() {
             return;
         }
 
-        // Move to the next round
         if (awaitingNextRound) {
 
             awaitingNextRound = false;
@@ -657,7 +604,6 @@ function initializeSimonSays() {
             return;
         }
 
-        // Replay the current sequence
         if (acceptingInput) {
 
             playSequence();
@@ -666,6 +612,446 @@ function initializeSimonSays() {
 
     });
 
+}
+
+
+// ==========================================
+// ROOM 3: TEAM CONNECTIONS
+// ==========================================
+
+function initializeTeamConnections() {
+
+    const categories = [
+        {
+            name: "ROOKIES",
+            difficulty: "EASY",
+            members: ["COOPER", "LEO", "BILLY", "LOUIS"]
+        },
+        {
+            name: "NICKNAMES",
+            difficulty: "EASY / MEDIUM",
+            members: ["POOKIE", "STICK", "MUFF", "CHRISPY"]
+        },
+        {
+            name: "SCAV HUNT TOP SCORERS",
+            difficulty: "MEDIUM / HARD",
+            members: ["TATE", "LINK", "TREVOR", "TOMMY"]
+        },
+        {
+            name: "4 ABSENCES",
+            difficulty: "HARD",
+            members: ["CARTER", "MICHAEL", "KAI", "TRENT"]
+        }
+    ];
+
+    let selectedTiles = [];
+    let mistakes = 0;
+    let solvedCategories = [];
+
+    const maxMistakes = 4;
+
+    const roomContent = document.getElementById("room-content");
+
+    // BUILD THE GAME LAYOUT
+    roomContent.innerHTML = `
+        <div class="connections-panel">
+
+            <p class="connections-instructions">
+                Find four groups of four connected names.
+                Select four tiles and submit your guess.
+            </p>
+
+            <div class="connections-attempts">
+                INCORRECT GUESSES:
+                <strong id="connections-mistakes">0 / 4</strong>
+            </div>
+
+            <div class="connections-status" id="connections-status">
+                Find the four hidden categories.
+            </div>
+
+            <div class="connections-solved" id="connections-solved"></div>
+
+            <div class="connections-grid" id="connections-grid"></div>
+
+            <div class="connections-controls">
+                <button
+                    class="connections-submit"
+                    id="connections-submit"
+                    disabled
+                >
+                    SUBMIT
+                </button>
+
+                <button
+                    class="connections-shuffle"
+                    id="connections-shuffle"
+                >
+                    SHUFFLE
+                </button>
+
+                <button
+                    class="connections-deselect"
+                    id="connections-deselect"
+                >
+                    DESELECT ALL
+                </button>
+            </div>
+
+            <p class="connections-feedback" id="connections-feedback">
+                Select four names to make a guess.
+            </p>
+
+        </div>
+    `;
+
+    const grid = document.getElementById("connections-grid");
+    const submitButton = document.getElementById("connections-submit");
+    const shuffleButton = document.getElementById("connections-shuffle");
+    const deselectButton = document.getElementById("connections-deselect");
+
+    let allTiles = categories.flatMap((category, categoryIndex) => {
+        return category.members.map(member => ({
+            name: member,
+            categoryIndex: categoryIndex
+        }));
+    });
+
+    let remainingTiles = shuffleArray(allTiles);
+
+
+    // DRAW THE REMAINING TILES
+    function renderTiles() {
+
+        grid.innerHTML = "";
+
+        remainingTiles.forEach(tile => {
+
+            const button = document.createElement("button");
+
+            button.className = "connection-tile";
+            button.textContent = tile.name;
+
+            if (selectedTiles.includes(tile.name)) {
+                button.classList.add("selected");
+            }
+
+            button.addEventListener("click", () => {
+                toggleTile(tile.name);
+            });
+
+            grid.appendChild(button);
+        });
+
+        updateControls();
+    }
+
+
+    // SELECT OR DESELECT A TILE
+    function toggleTile(name) {
+
+        if (mistakes >= maxMistakes) return;
+
+        if (selectedTiles.includes(name)) {
+
+            selectedTiles = selectedTiles.filter(
+                tile => tile !== name
+            );
+
+        } else {
+
+            if (selectedTiles.length >= 4) return;
+
+            selectedTiles.push(name);
+        }
+
+        renderTiles();
+    }
+
+
+    // UPDATE BUTTON STATES
+    function updateControls() {
+
+        submitButton.disabled =
+            selectedTiles.length !== 4 ||
+            mistakes >= maxMistakes;
+
+        shuffleButton.disabled =
+            mistakes >= maxMistakes;
+
+        deselectButton.disabled =
+            selectedTiles.length === 0 ||
+            mistakes >= maxMistakes;
+    }
+
+
+    // CALCULATE THE LARGEST CATEGORY OVERLAP
+    function getCommonCount(guess) {
+
+        let highestOverlap = 0;
+
+        categories.forEach(category => {
+
+            const overlap = guess.filter(name =>
+                category.members.includes(name)
+            ).length;
+
+            highestOverlap = Math.max(
+                highestOverlap,
+                overlap
+            );
+        });
+
+        return highestOverlap;
+    }
+
+
+    // CHECK THE PLAYER'S GUESS
+    function submitGuess() {
+
+        if (selectedTiles.length !== 4) return;
+        if (mistakes >= maxMistakes) return;
+
+        const guess = [...selectedTiles];
+
+        // CHECK WHETHER ALL FOUR BELONG TO THE SAME CATEGORY
+        const matchedCategory = categories.find(category => {
+
+            return guess.every(name =>
+                category.members.includes(name)
+            );
+
+        });
+
+        if (matchedCategory) {
+
+            handleCorrectGuess(matchedCategory);
+
+        } else {
+
+            handleIncorrectGuess(guess);
+
+        }
+    }
+
+
+    // CORRECT CATEGORY
+    function handleCorrectGuess(category) {
+
+        const categoryIndex = categories.indexOf(category);
+
+        solvedCategories.push(categoryIndex);
+
+        // Remove the four solved tiles
+        remainingTiles = remainingTiles.filter(tile =>
+            !category.members.includes(tile.name)
+        );
+
+        selectedTiles = [];
+
+        document.getElementById("connections-status").textContent =
+            "CATEGORY FOUND!";
+
+        document.getElementById("connections-feedback").textContent =
+            `You found: ${category.name}`;
+
+        renderSolvedCategories();
+
+        renderTiles();
+
+        // Check whether all four categories are solved
+        if (solvedCategories.length === 4) {
+            finishConnections();
+        }
+    }
+
+
+    // INCORRECT CATEGORY
+    function handleIncorrectGuess(guess) {
+
+        mistakes++;
+
+        document.getElementById("connections-mistakes").textContent =
+            `${mistakes} / ${maxMistakes}`;
+
+        const commonCount = getCommonCount(guess);
+
+        const feedback = document.getElementById(
+            "connections-feedback"
+        );
+
+        feedback.textContent =
+            `${commonCount} COMMON`;
+
+        feedback.classList.remove("connections-feedback-wrong");
+
+        // Restart animation
+        void feedback.offsetWidth;
+
+        feedback.classList.add("connections-feedback-wrong");
+
+        selectedTiles = [];
+
+        renderTiles();
+
+        if (mistakes >= maxMistakes) {
+            showConnectionsFailure();
+        }
+    }
+
+
+    // SHOW COMPLETED CATEGORIES
+    function renderSolvedCategories() {
+
+        const solvedContainer = document.getElementById(
+            "connections-solved"
+        );
+
+        solvedContainer.innerHTML = "";
+
+        solvedCategories.forEach(index => {
+
+            const category = categories[index];
+
+            const categoryBox = document.createElement("div");
+
+            categoryBox.className =
+                `solved-category solved-category-${index + 1}`;
+
+            categoryBox.innerHTML = `
+                <strong>${category.name}</strong>
+                <span>${category.members.join(" · ")}</span>
+            `;
+
+            solvedContainer.appendChild(categoryBox);
+        });
+    }
+
+
+    // SHUFFLE REMAINING TILES
+    function shuffleRemainingTiles() {
+
+        if (mistakes >= maxMistakes) return;
+
+        remainingTiles = shuffleArray(remainingTiles);
+
+        selectedTiles = [];
+
+        document.getElementById("connections-feedback").textContent =
+            "Tiles shuffled.";
+
+        renderTiles();
+    }
+
+
+    // CLEAR SELECTION
+    function deselectAll() {
+
+        selectedTiles = [];
+
+        document.getElementById("connections-feedback").textContent =
+            "Selection cleared.";
+
+        renderTiles();
+    }
+
+
+    // GAME OVER
+    function showConnectionsFailure() {
+
+        submitButton.disabled = true;
+        shuffleButton.disabled = true;
+        deselectButton.disabled = true;
+
+        document.getElementById("connections-status").textContent =
+            "NO GUESSES REMAINING";
+
+        document.getElementById("connections-feedback").textContent =
+            "You ran out of attempts. Restart to try again.";
+
+        roomContent.querySelector(".connections-panel").insertAdjacentHTML(
+            "beforeend",
+            `
+                <div class="connections-failure">
+                    <h2>OUT OF GUESSES!</h2>
+                    <p>You used all four incorrect guesses.</p>
+                    <p>Your room timer is still running.</p>
+
+                    <button
+                        class="connections-restart"
+                        id="connections-restart"
+                    >
+                        TRY AGAIN
+                    </button>
+                </div>
+            `
+        );
+
+        document.getElementById("connections-restart")
+            .addEventListener("click", restartConnections);
+    }
+
+
+    // RESTART THE PUZZLE WITHOUT RESETTING THE TIMER
+    function restartConnections() {
+
+        selectedTiles = [];
+        mistakes = 0;
+        solvedCategories = [];
+
+        remainingTiles = shuffleArray(allTiles);
+
+        document.getElementById("connections-mistakes").textContent =
+            "0 / 4";
+
+        document.getElementById("connections-status").textContent =
+            "Find the four hidden categories.";
+
+        document.getElementById("connections-feedback").textContent =
+            "Select four names to make a guess.";
+
+        const failure = roomContent.querySelector(
+            ".connections-failure"
+        );
+
+        if (failure) {
+            failure.remove();
+        }
+
+        renderSolvedCategories();
+        renderTiles();
+    }
+
+
+    // COMPLETE THE GAME
+    function finishConnections() {
+
+        const elapsed = Date.now() - roomStartTime;
+
+        roomContent.innerHTML = `
+            <div class="memory-complete">
+                <h2>ROOM 03 COMPLETE!</h2>
+
+                <p>You successfully found all four categories.</p>
+
+                <p>Incorrect guesses: ${mistakes} / 4</p>
+
+                <p>Returning to room selection...</p>
+            </div>
+        `;
+
+        completeRoom(elapsed);
+    }
+
+
+    // CONNECT BUTTONS
+    submitButton.addEventListener("click", submitGuess);
+
+    shuffleButton.addEventListener("click", shuffleRemainingTiles);
+
+    deselectButton.addEventListener("click", deselectAll);
+
+    renderTiles();
 }
 
 
@@ -681,7 +1067,6 @@ function completeRoom(completionTime) {
         ? completionTime
         : Date.now() - roomStartTime;
 
-    // Save room time
     roomTimes[currentRoom] = elapsed;
 
     sessionStorage.setItem(
@@ -696,7 +1081,6 @@ function completeRoom(completionTime) {
 
     updateMenu();
 
-    // Give the completion message time to display
     setTimeout(() => {
         returnToMenu();
     }, 700);
@@ -709,7 +1093,6 @@ function completeRoom(completionTime) {
 
 function returnToMenu() {
 
-    // Don't allow players to abandon an unfinished challenge
     if (currentRoom !== null) {
         alert("Finish the challenge before returning to the menu!");
         return;
@@ -753,7 +1136,6 @@ function updateMenu() {
         }
     }
 
-    // Calculate overall time
     Object.values(roomTimes).forEach(time => {
         totalTime += time;
     });
@@ -761,12 +1143,10 @@ function updateMenu() {
     document.getElementById("total-time").textContent =
         formatTime(totalTime);
 
-    // Check if all rooms are complete
     const allComplete = [1, 2, 3, 4].every(
         room => roomTimes[room] !== undefined
     );
 
-    // Unlock ESCAPE
     document.getElementById("escape-button").disabled =
         !allComplete;
 }
