@@ -98,7 +98,7 @@ function initializeDiscMemory() {
         "BACKHAND",
         "CHEEKS",
         "BURN",
-        "BOX"
+        "BANANA BREAD"
     ];
 
     const cards = shuffleArray([...words, ...words]);
@@ -577,7 +577,7 @@ function initializeTeamConnections() {
             members: ["COOPER", "LEO", "BILLY", "LOUIS"]
         },
         {
-            name: "NICKNAMES",
+            name: "NICKNAMES OVER REGULAR NAMES",
             difficulty: "GREEN",
             members: ["POOKIE", "STICK", "MUFF", "CHRISPY"]
         },
@@ -587,9 +587,9 @@ function initializeTeamConnections() {
             members: ["TATE", "LINK", "TREVOR", "TOMMY"]
         },
         {
-            name: "4 ABSENCES",
+            name: "4 SHITTIES",
             difficulty: "PURPLE",
-            members: ["CARTER", "MICHAEL", "KAI", "TRENT"]
+            members: ["CARTER", "MICHAEL", "KAI", "TRENT (PROBABLY)"]
         }
     ];
 
