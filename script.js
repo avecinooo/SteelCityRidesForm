@@ -114,7 +114,7 @@ function initializeDiscMemory() {
     roomContent.innerHTML = `
         <p class="memory-instructions">
             Turn over two boxes at a time.
-            Find all eight matching pairs to escape the room!
+            Get all matching pairs.
         </p>
 
         <div class="memory-stats">
