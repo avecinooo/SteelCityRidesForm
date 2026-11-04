@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -557,6 +558,226 @@ button:hover:not(:disabled) {
     cursor: not-allowed;
 }
 
+/* ==========================================
+   ROOM 3: TEAM CONNECTIONS
+========================================== */
+
+.connections-panel {
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.connections-instructions {
+    color: #b5c0b8;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+.connections-attempts {
+    color: #829083;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+}
+
+.connections-attempts strong {
+    color: #a4d65e;
+}
+
+.connections-status {
+    color: #a4d65e;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    min-height: 25px;
+    margin-bottom: 15px;
+}
+
+.connections-solved {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 15px;
+}
+
+.solved-category {
+    background: #26372b;
+    border: 1px solid #a4d65e;
+    border-radius: 8px;
+    padding: 13px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: #101713;
+    animation: categoryReveal 0.3s ease;
+}
+
+.solved-category strong {
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+
+.solved-category span {
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.solved-category-1 {
+    background: #dce9b9;
+}
+
+.solved-category-2 {
+    background: #b8d6c2;
+}
+
+.solved-category-3 {
+    background: #b9d4e5;
+}
+
+.solved-category-4 {
+    background: #e6c8a8;
+}
+
+@keyframes categoryReveal {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.connections-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 9px;
+    margin: 20px auto;
+}
+
+.connection-tile {
+    min-width: 0;
+    min-height: 76px;
+    padding: 8px 4px;
+    background: #e0e5dc;
+    border: 2px solid transparent;
+    border-radius: 7px;
+    color: #18221a;
+    font-size: clamp(10px, 2vw, 14px);
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    overflow-wrap: anywhere;
+    transition: 0.15s;
+}
+
+.connection-tile:hover:not(:disabled) {
+    background: #cbd9bd;
+    transform: translateY(-2px);
+}
+
+.connection-tile.selected {
+    background: #a4d65e;
+    border-color: #e0f5bd;
+    transform: scale(0.96);
+}
+
+.connections-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin: 22px auto 15px;
+}
+
+.connections-controls button {
+    padding: 13px 15px;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.connections-submit {
+    min-width: 130px;
+}
+
+.connections-shuffle,
+.connections-deselect {
+    background: transparent;
+    border: 1px solid #71816f;
+    color: white;
+}
+
+.connections-shuffle:hover:not(:disabled),
+.connections-deselect:hover:not(:disabled) {
+    background: #26372b;
+}
+
+.connections-controls button:disabled {
+    background: #344538;
+    border-color: #344538;
+    color: #829083;
+    cursor: not-allowed;
+}
+
+.connections-feedback {
+    min-height: 28px;
+    color: #a4d65e;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin: 15px 0;
+}
+
+.connections-feedback-wrong {
+    animation: wrongGuess 0.3s ease;
+}
+
+@keyframes wrongGuess {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+.connections-failure {
+    background: #1b2820;
+    border: 1px solid #9d5555;
+    border-radius: 9px;
+    padding: 25px;
+    margin-top: 25px;
+}
+
+.connections-failure h2 {
+    color: #e18b8b;
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.connections-failure p {
+    color: #c5cec7;
+    font-size: 14px;
+    margin: 8px 0;
+}
+
+.connections-restart {
+    width: 100%;
+    max-width: 220px;
+    margin: 20px auto 0;
+}
+
+
 /* GENERAL */
 
 .hidden {
@@ -564,6 +785,7 @@ button:hover:not(:disabled) {
 }
 
 @media (max-width: 500px) {
+
     .room-preview {
         grid-template-columns: 1fr;
     }
@@ -592,5 +814,25 @@ button:hover:not(:disabled) {
     .simon-button {
         min-height: 115px;
         border-radius: 7px;
+    }
+
+    .connections-grid {
+        gap: 6px;
+    }
+
+    .connection-tile {
+        min-height: 66px;
+        padding: 6px 2px;
+        font-size: 10px;
+        letter-spacing: 0;
+    }
+
+    .connections-controls {
+        gap: 7px;
+    }
+
+    .connections-controls button {
+        padding: 12px 10px;
+        font-size: 10px;
     }
 }
