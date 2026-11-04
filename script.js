@@ -1,8 +1,7 @@
 const roomNames = {
     1: "DISC MEMORY",
     2: "SIMON SAYS",
-    3: "TEAM CONNECTIONS",
-    4: "THE CHASE"
+    3: "TEAM CONNECTIONS"
 };
 
 // Load saved room times
@@ -77,9 +76,6 @@ function enterRoom(roomNumber) {
         initializeSimonSays();
     } else if (roomNumber === 3) {
         initializeTeamConnections();
-    } else {
-        document.getElementById("room-content").innerHTML =
-            "<p>This challenge is coming soon!</p>";
     }
 
     clearInterval(timerInterval);
@@ -278,9 +274,6 @@ function initializeSimonSays() {
         "HUCK"
     ];
 
-    const totalRounds = 7;
-    const startingSequenceLength = 4;
-
     let sequence = [];
     let currentRound = 1;
     let playerPosition = 0;
@@ -288,6 +281,7 @@ function initializeSimonSays() {
     let mistakes = 0;
     let acceptingInput = false;
     let gameStarted = false;
+    let awaitingNextRound = false;
 
     let playbackTimeouts = [];
 
@@ -331,8 +325,8 @@ function initializeSimonSays() {
             </div>
 
             <div class="simon-progress">
-                SEQUENCE:
-                <strong id="simon-progress">0 / 10 ACTIONS</strong>
+                PROGRESS:
+                <strong id="simon-progress">0 / 7 ROUNDS</strong>
             </div>
 
             <div class="simon-progress">
@@ -406,17 +400,6 @@ function initializeSimonSays() {
     }
 
 
-    function updateRoundDisplay() {
-
-        document.getElementById("simon-round").textContent =
-            `ROUND ${currentRound} OF ${totalRounds}`;
-
-        document.getElementById("simon-progress").textContent =
-            `${sequence.length} / 10 ACTIONS`;
-    }
-
-
-    // PLAY THE CURRENT SEQUENCE
     function playSequence() {
 
         clearPlayback();
@@ -427,13 +410,12 @@ function initializeSimonSays() {
         setButtonsEnabled(false);
 
         startButton.disabled = true;
-        startButton.textContent = "WATCHING...";
 
         setStatus("WATCH THE SEQUENCE...");
 
-        updateRoundDisplay();
+        document.getElementById("simon-round").textContent =
+            `ROUND ${currentRound} OF 7`;
 
-        // Playback gets slightly faster as the sequence grows
         const flashDuration =
             Math.max(250, 550 - currentRound * 35);
 
@@ -453,7 +435,7 @@ function initializeSimonSays() {
                     setButtonsEnabled(true);
 
                     startButton.disabled = false;
-                    startButton.textContent = "REWATCH SEQUENCE";
+                    startButton.textContent = "REPLAY SEQUENCE";
 
                     setStatus("YOUR TURN! REPEAT THE SEQUENCE.");
 
@@ -485,33 +467,6 @@ function initializeSimonSays() {
     }
 
 
-    // AUTOMATICALLY START THE NEXT ROUND
-    function startNextRound() {
-
-        currentRound++;
-
-        // Add one new action to the existing sequence
-        addToSequence();
-
-        setStatus(`ROUND ${currentRound - 1} COMPLETE!`);
-
-        startButton.disabled = true;
-        startButton.textContent = "NEXT SEQUENCE...";
-
-        // Brief pause before automatically showing the next sequence
-        const nextRoundTimeout = setTimeout(() => {
-
-            if (currentRoom !== 2) return;
-
-            playSequence();
-
-        }, 900);
-
-        playbackTimeouts.push(nextRoundTimeout);
-    }
-
-
-    // HANDLE PLAYER BUTTON PRESSES
     function handlePlayerInput(action) {
 
         if (!acceptingInput) return;
@@ -531,16 +486,23 @@ function initializeSimonSays() {
                 acceptingInput = false;
                 setButtonsEnabled(false);
 
-                updateRoundDisplay();
+                document.getElementById("simon-progress").textContent =
+                    `${currentRound} / 7 ROUNDS`;
 
-                if (currentRound === totalRounds) {
+                if (currentRound === 7) {
 
                     finishSimonSays();
 
                 } else {
 
-                    startNextRound();
+                    awaitingNextRound = true;
 
+                    setStatus(
+                        `ROUND ${currentRound} COMPLETE!`
+                    );
+
+                    startButton.disabled = false;
+                    startButton.textContent = "NEXT ROUND";
                 }
             }
 
@@ -556,17 +518,11 @@ function initializeSimonSays() {
             setButtonsEnabled(false);
 
             startButton.disabled = true;
-            startButton.textContent = "WATCHING...";
 
             setStatus("INCORRECT! WATCH THE SEQUENCE AGAIN.");
 
-            // Replay the same sequence after a mistake
             const retryTimeout = setTimeout(() => {
-
-                if (currentRoom !== 2) return;
-
                 playSequence();
-
             }, 900);
 
             playbackTimeouts.push(retryTimeout);
@@ -574,7 +530,6 @@ function initializeSimonSays() {
     }
 
 
-    // FINISH SIMON SAYS
     function finishSimonSays() {
 
         acceptingInput = false;
@@ -593,8 +548,6 @@ function initializeSimonSays() {
 
                 <p>You successfully completed all seven rounds.</p>
 
-                <p>Final sequence: 10 actions</p>
-
                 <p>Mistakes: ${mistakes}</p>
 
                 <p>Returning to room selection...</p>
@@ -605,7 +558,6 @@ function initializeSimonSays() {
     }
 
 
-    // CONNECT THE FOUR ACTION BUTTONS
     simonButtons.forEach(button => {
 
         button.addEventListener("click", () => {
@@ -619,20 +571,15 @@ function initializeSimonSays() {
     });
 
 
-    // START GAME OR REWATCH THE CURRENT SEQUENCE
     startButton.addEventListener("click", () => {
 
         if (startButton.disabled) return;
 
-        // First time starting the game
         if (!gameStarted) {
 
             gameStarted = true;
 
-            // Begin with four actions instead of one
-            for (let i = 0; i < startingSequenceLength; i++) {
-                addToSequence();
-            }
+            addToSequence();
 
             startButton.disabled = true;
 
@@ -641,7 +588,22 @@ function initializeSimonSays() {
             return;
         }
 
-        // Allow the player to rewatch the current sequence
+        if (awaitingNextRound) {
+
+            awaitingNextRound = false;
+
+            currentRound++;
+
+            addToSequence();
+
+            startButton.disabled = true;
+            startButton.textContent = "WATCHING...";
+
+            playSequence();
+
+            return;
+        }
+
         if (acceptingInput) {
 
             playSequence();
@@ -1215,7 +1177,7 @@ function updateMenu() {
 
     let totalTime = 0;
 
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= 3; i++) {
 
         const status = document.getElementById("status-" + i);
         const button = document.getElementById("room-button-" + i);
@@ -1242,7 +1204,7 @@ function updateMenu() {
     document.getElementById("total-time").textContent =
         formatTime(totalTime);
 
-    const allComplete = [1, 2, 3, 4].every(
+    const allComplete = [1, 2, 3].every(
         room => roomTimes[room] !== undefined
     );
 
@@ -1257,7 +1219,7 @@ function updateMenu() {
 
 function showResults() {
 
-    const allComplete = [1, 2, 3, 4].every(
+    const allComplete = [1, 2, 3].every(
         room => roomTimes[room] !== undefined
     );
 
@@ -1273,7 +1235,7 @@ function showResults() {
 
     let totalTime = 0;
 
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= 3; i++) {
 
         const time = roomTimes[i];
 
