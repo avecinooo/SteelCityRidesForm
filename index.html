@@ -28,7 +28,7 @@
             to calculate your final time.
         </p>
 
-        <!-- ROOM SELECTION -->
+        <!-- GAME SELECTION -->
         <div class="room-preview">
 
             <button class="room-button" id="room-button-1" onclick="enterRoom(1)">
@@ -69,7 +69,7 @@
 
         <!-- ESCAPE BUTTON -->
         <button id="escape-button" onclick="showResults()" disabled>
-            ESCAPE
+            COMPLETE
         </button>
 
         <button id="instructions-button" class="secondary-button">
@@ -77,20 +77,20 @@
         </button>
 
         <p class="footer-text">
-            YOUR TIME STARTS WHEN YOU ENTER A ROOM.
+            YOUR TIME STARTS WHEN YOU ENTER A GAME.
         </p>
 
     </main>
 
-    <!-- ROOM SCREEN -->
+    <!-- GAME SCREEN -->
     <section id="room-screen" class="hidden">
 
         <button class="back-button" onclick="returnToMenu()">
-            ← BACK TO ROOMS
+            ← BACK TO GAMES
         </button>
 
         <div class="room-heading">
-            <p id="room-label">ROOM 01</p>
+            <p id="room-label">GAME 01</p>
             <h1 id="room-title">DISC MEMORY</h1>
         </div>
 
@@ -120,7 +120,7 @@
             <strong id="final-time">00:00.000</strong>
         </div>
 
-        <h2 class="results-heading">YOUR ROOM TIMES</h2>
+        <h2 class="results-heading">YOUR MINI GAME TIMES</h2>
 
         <div class="results-list" id="results-list"></div>
 
@@ -157,7 +157,7 @@
             <h2>HOW TO PLAY</h2>
 
             <p>
-                Select any of the three rooms to begin its challenge.
+                Select any of the three gamess to begin its challenge.
                 Your timer starts as soon as you enter.
             </p>
 
@@ -167,8 +167,8 @@
             </p>
 
             <p>
-                Finish all three rooms to unlock the final escape.
-                Your overall time is the sum of all three room times.
+                Finish all three gamess to unlock the final complete button.
+                Your overall time is the sum of all three game times.
             </p>
 
             <button id="close-instructions">GOT IT</button>
