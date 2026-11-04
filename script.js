@@ -4,6 +4,9 @@ const roomNames = {
     3: "TEAM CONNECTIONS"
 };
 
+// PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+const GOOGLE_SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+
 // Load saved room times
 let roomTimes = JSON.parse(
     sessionStorage.getItem("roomTimes")
@@ -46,17 +49,9 @@ function shuffleArray(array) {
 // ENTER A ROOM
 function enterRoom(roomNumber) {
 
-    if (![1, 2, 3].includes(roomNumber)) {
-        return;
-    }
-
-    if (roomTimes[roomNumber] !== undefined) {
-        return;
-    }
-
-    if (currentRoom !== null) {
-        return;
-    }
+    if (![1, 2, 3].includes(roomNumber)) return;
+    if (roomTimes[roomNumber] !== undefined) return;
+    if (currentRoom !== null) return;
 
     currentRoom = roomNumber;
     roomStartTime = Date.now();
@@ -278,10 +273,8 @@ function initializeSimonSays() {
         "HUCK"
     ];
 
-    // Five rounds: 4, 5, 6, 7, and 8 actions
     const totalRounds = 5;
     const startingSequenceLength = 4;
-    const maximumSequenceLength = 8;
 
     let sequence = [];
     let currentRound = 1;
@@ -360,7 +353,6 @@ function initializeSimonSays() {
 
 
     function setButtonsEnabled(enabled) {
-
         simonButtons.forEach(button => {
             button.disabled = !enabled;
         });
@@ -418,7 +410,6 @@ function initializeSimonSays() {
     }
 
 
-    // PLAY THE CURRENT SEQUENCE
     function playSequence() {
 
         clearPlayback();
@@ -435,7 +426,6 @@ function initializeSimonSays() {
 
         updateRoundDisplay();
 
-        // Playback gets slightly faster as the rounds progress
         const flashDuration =
             Math.max(250, 550 - currentRound * 35);
 
@@ -489,7 +479,6 @@ function initializeSimonSays() {
     }
 
 
-    // AUTOMATICALLY START THE NEXT ROUND
     function startNextRound() {
 
         acceptingInput = false;
@@ -502,7 +491,6 @@ function initializeSimonSays() {
             `ROUND ${currentRound} COMPLETE! NEXT ROUND STARTING...`
         );
 
-        // Brief pause, then add one action and play the next sequence
         const nextRoundTimeout = setTimeout(() => {
 
             if (currentRoom !== 2) return;
@@ -519,11 +507,9 @@ function initializeSimonSays() {
     }
 
 
-    // HANDLE PLAYER BUTTON PRESSES
     function handlePlayerInput(action) {
 
         if (!acceptingInput) return;
-
         if (currentRoom !== 2) return;
 
         const expectedAction = sequence[playerPosition];
@@ -542,13 +528,9 @@ function initializeSimonSays() {
                 setButtonsEnabled(false);
 
                 if (currentRound === totalRounds) {
-
                     finishSimonSays();
-
                 } else {
-
                     startNextRound();
-
                 }
             }
 
@@ -568,7 +550,6 @@ function initializeSimonSays() {
 
             setStatus("INCORRECT! WATCH THE SEQUENCE AGAIN.");
 
-            // Replay the same sequence after a mistake
             const retryTimeout = setTimeout(() => {
 
                 if (currentRoom !== 2) return;
@@ -582,7 +563,6 @@ function initializeSimonSays() {
     }
 
 
-    // FINISH SIMON SAYS
     function finishSimonSays() {
 
         acceptingInput = false;
@@ -598,13 +578,9 @@ function initializeSimonSays() {
         roomContent.innerHTML = `
             <div class="memory-complete">
                 <h2>ROOM 02 COMPLETE!</h2>
-
                 <p>You successfully completed all five rounds.</p>
-
                 <p>Final sequence: 8 actions</p>
-
                 <p>Mistakes: ${mistakes}</p>
-
                 <p>Returning to room selection...</p>
             </div>
         `;
@@ -613,31 +589,23 @@ function initializeSimonSays() {
     }
 
 
-    // CONNECT THE FOUR ACTION BUTTONS
     simonButtons.forEach(button => {
 
         button.addEventListener("click", () => {
-
-            const action = button.dataset.action;
-
-            handlePlayerInput(action);
-
+            handlePlayerInput(button.dataset.action);
         });
 
     });
 
 
-    // START GAME OR REWATCH THE CURRENT SEQUENCE
     startButton.addEventListener("click", () => {
 
         if (startButton.disabled) return;
 
-        // First time starting the game
         if (!gameStarted) {
 
             gameStarted = true;
 
-            // Begin with four actions
             for (let i = 0; i < startingSequenceLength; i++) {
                 addToSequence();
             }
@@ -647,11 +615,8 @@ function initializeSimonSays() {
             return;
         }
 
-        // Allow the player to rewatch the current sequence
         if (acceptingInput) {
-
             playSequence();
-
         }
 
     });
@@ -696,7 +661,6 @@ function initializeTeamConnections() {
 
     const roomContent = document.getElementById("room-content");
 
-    // BUILD THE GAME LAYOUT
     roomContent.innerHTML = `
         <div class="connections-panel">
 
@@ -719,25 +683,15 @@ function initializeTeamConnections() {
             <div class="connections-grid" id="connections-grid"></div>
 
             <div class="connections-controls">
-                <button
-                    class="connections-submit"
-                    id="connections-submit"
-                    disabled
-                >
+                <button class="connections-submit" id="connections-submit" disabled>
                     SUBMIT
                 </button>
 
-                <button
-                    class="connections-shuffle"
-                    id="connections-shuffle"
-                >
+                <button class="connections-shuffle" id="connections-shuffle">
                     SHUFFLE
                 </button>
 
-                <button
-                    class="connections-deselect"
-                    id="connections-deselect"
-                >
+                <button class="connections-deselect" id="connections-deselect">
                     DESELECT ALL
                 </button>
             </div>
@@ -764,7 +718,6 @@ function initializeTeamConnections() {
     let remainingTiles = shuffleArray(allTiles);
 
 
-    // DRAW THE REMAINING TILES
     function renderTiles() {
 
         grid.innerHTML = "";
@@ -791,7 +744,6 @@ function initializeTeamConnections() {
     }
 
 
-    // SELECT OR DESELECT A TILE
     function toggleTile(name) {
 
         if (mistakes >= maxMistakes) return;
@@ -813,7 +765,6 @@ function initializeTeamConnections() {
     }
 
 
-    // UPDATE BUTTON STATES
     function updateControls() {
 
         submitButton.disabled =
@@ -829,7 +780,6 @@ function initializeTeamConnections() {
     }
 
 
-    // CALCULATE THE LARGEST CATEGORY OVERLAP
     function getCommonCount(guess) {
 
         let highestOverlap = 0;
@@ -850,7 +800,6 @@ function initializeTeamConnections() {
     }
 
 
-    // CHECK THE PLAYER'S GUESS
     function submitGuess() {
 
         if (selectedTiles.length !== 4) return;
@@ -858,7 +807,6 @@ function initializeTeamConnections() {
 
         const guess = [...selectedTiles];
 
-        // CHECK WHETHER ALL FOUR BELONG TO THE SAME CATEGORY
         const matchedCategory = categories.find(category => {
 
             return guess.every(name =>
@@ -868,25 +816,19 @@ function initializeTeamConnections() {
         });
 
         if (matchedCategory) {
-
             handleCorrectGuess(matchedCategory);
-
         } else {
-
             handleIncorrectGuess(guess);
-
         }
     }
 
 
-    // CORRECT CATEGORY
     function handleCorrectGuess(category) {
 
         const categoryIndex = categories.indexOf(category);
 
         solvedCategories.push(categoryIndex);
 
-        // Remove the four solved tiles
         remainingTiles = remainingTiles.filter(tile =>
             !category.members.includes(tile.name)
         );
@@ -903,14 +845,12 @@ function initializeTeamConnections() {
 
         renderTiles();
 
-        // Check whether all four categories are solved
         if (solvedCategories.length === 4) {
             finishConnections();
         }
     }
 
 
-    // INCORRECT CATEGORY
     function handleIncorrectGuess(guess) {
 
         mistakes++;
@@ -924,12 +864,10 @@ function initializeTeamConnections() {
             "connections-feedback"
         );
 
-        feedback.textContent =
-            `${commonCount} COMMON`;
+        feedback.textContent = `${commonCount} COMMON`;
 
         feedback.classList.remove("connections-feedback-wrong");
 
-        // Restart animation
         void feedback.offsetWidth;
 
         feedback.classList.add("connections-feedback-wrong");
@@ -944,7 +882,6 @@ function initializeTeamConnections() {
     }
 
 
-    // SHOW COMPLETED CATEGORIES
     function renderSolvedCategories() {
 
         const solvedContainer = document.getElementById(
@@ -972,7 +909,6 @@ function initializeTeamConnections() {
     }
 
 
-    // SHUFFLE REMAINING TILES
     function shuffleRemainingTiles() {
 
         if (mistakes >= maxMistakes) return;
@@ -988,7 +924,6 @@ function initializeTeamConnections() {
     }
 
 
-    // CLEAR SELECTION
     function deselectAll() {
 
         selectedTiles = [];
@@ -1000,7 +935,6 @@ function initializeTeamConnections() {
     }
 
 
-    // GAME OVER
     function showConnectionsFailure() {
 
         submitButton.disabled = true;
@@ -1036,7 +970,6 @@ function initializeTeamConnections() {
     }
 
 
-    // RESTART THE PUZZLE WITHOUT RESETTING THE TIMER
     function restartConnections() {
 
         selectedTiles = [];
@@ -1067,17 +1000,12 @@ function initializeTeamConnections() {
     }
 
 
-    // COMPLETE THE GAME AND SHOW RESULTS
     function finishConnections() {
 
-        // Capture the final time before stopping the timer
         const elapsed = Date.now() - roomStartTime;
 
-        // Save the room time and stop the timer.
-        // The true argument keeps the player on this screen.
         completeRoom(elapsed, true);
 
-        // Build the completed category results
         const completedCategories = solvedCategories.map(index => {
 
             const category = categories[index];
@@ -1090,7 +1018,6 @@ function initializeTeamConnections() {
             `;
         }).join("");
 
-        // Display the Connections results instead of returning to the menu
         roomContent.innerHTML = `
             <div class="connections-results">
 
@@ -1136,11 +1063,8 @@ function initializeTeamConnections() {
     }
 
 
-    // CONNECT BUTTONS
     submitButton.addEventListener("click", submitGuess);
-
     shuffleButton.addEventListener("click", shuffleRemainingTiles);
-
     deselectButton.addEventListener("click", deselectAll);
 
     renderTiles();
@@ -1159,7 +1083,6 @@ function completeRoom(completionTime, stayOnRoom = false) {
         ? completionTime
         : Date.now() - roomStartTime;
 
-    // Save the completed room time
     roomTimes[currentRoom] = elapsed;
 
     sessionStorage.setItem(
@@ -1167,11 +1090,9 @@ function completeRoom(completionTime, stayOnRoom = false) {
         JSON.stringify(roomTimes)
     );
 
-    // Stop the timer immediately
     clearInterval(timerInterval);
     timerInterval = null;
 
-    // Show the exact final time on the room screen
     document.getElementById("room-timer").textContent =
         formatTime(elapsed);
 
@@ -1180,8 +1101,6 @@ function completeRoom(completionTime, stayOnRoom = false) {
 
     updateMenu();
 
-    // Connections stays on its results screen.
-    // Other rooms return to the menu as before.
     if (!stayOnRoom) {
 
         setTimeout(() => {
@@ -1295,6 +1214,200 @@ function showResults() {
 
     document.getElementById("final-time").textContent =
         formatTime(totalTime);
+
+    // Save overall time in the ride sign-up form
+    document.getElementById("signup-overall-time").value =
+        formatTime(totalTime);
+}
+
+
+// ==========================================
+// RIDE SIGN-UP FORM
+// ==========================================
+
+function initializeRideSignup() {
+
+    const form = document.getElementById("ride-signup-form");
+
+    const capacityGroup = document.getElementById("capacity-group");
+    const capacitySelect = document.getElementById("signup-capacity");
+
+    const capacityOther = document.getElementById(
+        "signup-capacity-other"
+    );
+
+    const submitButton = document.getElementById("signup-submit");
+    const message = document.getElementById("signup-message");
+
+    const iframe = document.getElementById("sheet-submit-frame");
+
+    let submissionPending = false;
+
+    // Connect the form to the Google Apps Script endpoint
+    form.action = GOOGLE_SCRIPT_URL;
+
+
+    // SHOW OR HIDE DRIVER CAPACITY
+    function updateDriverFields() {
+
+        const selectedDriver = form.querySelector(
+            'input[name="canDrive"]:checked'
+        );
+
+        const canDrive = selectedDriver
+            ? selectedDriver.value === "Yes"
+            : false;
+
+        capacityGroup.classList.toggle("hidden", !canDrive);
+
+        capacitySelect.required = canDrive;
+
+        if (!canDrive) {
+
+            capacitySelect.value = "";
+
+            capacityOther.value = "";
+            capacityOther.classList.add("hidden");
+            capacityOther.required = false;
+
+        }
+
+        updateOtherCapacity();
+    }
+
+
+    // SHOW OTHER CAPACITY INPUT
+    function updateOtherCapacity() {
+
+        const isOther =
+            capacitySelect.value === "Other" &&
+            !capacityGroup.classList.contains("hidden");
+
+        capacityOther.classList.toggle("hidden", !isOther);
+        capacityOther.required = isOther;
+
+        if (!isOther) {
+            capacityOther.value = "";
+        }
+    }
+
+
+    form.querySelectorAll('input[name="canDrive"]').forEach(radio => {
+
+        radio.addEventListener("change", updateDriverFields);
+
+    });
+
+    capacitySelect.addEventListener("change", updateOtherCapacity);
+
+
+    // VALIDATE DEPARTURE TIME SELECTION
+    form.addEventListener("submit", (event) => {
+
+        const selectedTimes = form.querySelectorAll(
+            'input[name="departureTimes"]:checked'
+        );
+
+        if (selectedTimes.length === 0) {
+
+            event.preventDefault();
+
+            message.textContent =
+                "Please select at least one departure time.";
+
+            message.className = "signup-message error";
+
+            return;
+        }
+
+        if (
+            !GOOGLE_SCRIPT_URL ||
+            GOOGLE_SCRIPT_URL.includes("PASTE_YOUR")
+        ) {
+
+            event.preventDefault();
+
+            message.textContent =
+                "The sign-up form has not been connected to Google Sheets yet.";
+
+            message.className = "signup-message error";
+
+            return;
+        }
+
+        // The browser will submit the form to the hidden iframe.
+        submissionPending = true;
+
+        submitButton.disabled = true;
+        submitButton.textContent = "SUBMITTING...";
+
+        message.textContent = "Sending your information...";
+        message.className = "signup-message";
+
+    });
+
+
+    // RECEIVE SUCCESS OR ERROR MESSAGE FROM APPS SCRIPT
+    window.addEventListener("message", (event) => {
+
+        if (event.source !== iframe.contentWindow) return;
+
+        if (!event.data || event.data.type !== "rideSignup") return;
+
+        submissionPending = false;
+
+        submitButton.disabled = false;
+        submitButton.textContent = "SUBMIT RIDE SIGN-UP";
+
+        if (event.data.status === "success") {
+
+            message.textContent =
+                "Your information has been submitted successfully!";
+
+            message.className = "signup-message success";
+
+            form.reset();
+
+            updateDriverFields();
+
+            form.querySelectorAll(
+                'input[name="departureTimes"]'
+            ).forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+        } else {
+
+            message.textContent =
+                "Something went wrong. Please try submitting again.";
+
+            message.className = "signup-message error";
+
+        }
+
+    });
+
+
+    // FALLBACK IF THE RESPONSE PAGE LOADS WITHOUT A MESSAGE
+    iframe.addEventListener("load", () => {
+
+        if (!submissionPending) return;
+
+        // Do not claim the submission succeeded without the
+        // Apps Script confirmation message.
+
+        message.textContent =
+            "Your submission was sent. If you do not see a confirmation, please contact an organizer.";
+
+        message.className = "signup-message";
+
+        submissionPending = false;
+
+        submitButton.disabled = false;
+        submitButton.textContent = "SUBMIT RIDE SIGN-UP";
+
+    });
+
 }
 
 
@@ -1320,7 +1433,8 @@ document.getElementById("close-instructions")
 
 
 // ==========================================
-// INITIALIZE MENU
+// INITIALIZE
 // ==========================================
 
+initializeRideSignup();
 updateMenu();
