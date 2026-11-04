@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -603,8 +602,7 @@ button:hover:not(:disabled) {
 }
 
 .solved-category {
-    background: #26372b;
-    border: 1px solid #a4d65e;
+    border: 1px solid transparent;
     border-radius: 8px;
     padding: 13px 10px;
     display: flex;
@@ -625,20 +623,31 @@ button:hover:not(:disabled) {
     letter-spacing: 1px;
 }
 
+/* CATEGORY DIFFICULTY COLORS
+   1 = Yellow (easiest)
+   2 = Green
+   3 = Blue
+   4 = Purple (hardest)
+*/
+
 .solved-category-1 {
-    background: #dce9b9;
+    background: #f9df78;
+    border-color: #e9c34e;
 }
 
 .solved-category-2 {
-    background: #b8d6c2;
+    background: #a9d9a5;
+    border-color: #7cbd78;
 }
 
 .solved-category-3 {
-    background: #b9d4e5;
+    background: #9fc8ed;
+    border-color: #6fa7dc;
 }
 
 .solved-category-4 {
-    background: #e6c8a8;
+    background: #c7afe8;
+    border-color: #a98bd5;
 }
 
 @keyframes categoryReveal {
@@ -777,6 +786,75 @@ button:hover:not(:disabled) {
     margin: 20px auto 0;
 }
 
+/* CONNECTIONS COMPLETION RESULTS */
+
+.connections-results {
+    max-width: 500px;
+    margin: 25px auto;
+    padding: 28px 22px;
+    background: #1b2820;
+    border: 1px solid #a4d65e;
+    border-radius: 10px;
+    animation: categoryReveal 0.4s ease;
+}
+
+.connections-results h2 {
+    color: #a4d65e;
+    font-size: 25px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.connections-results-intro {
+    color: #c5cec7;
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+.connections-result-stat {
+    padding: 15px;
+    margin: 10px 0;
+    background: #26372b;
+    border-radius: 7px;
+}
+
+.connections-result-stat span {
+    display: block;
+    color: #829083;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 7px;
+}
+
+.connections-result-stat strong {
+    color: #a4d65e;
+    font-family: monospace;
+    font-size: 25px;
+}
+
+.connections-results-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 22px 0;
+}
+
+.connections-results .solved-category {
+    animation: none;
+}
+
+.connections-results-message {
+    color: #c5cec7;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 18px 0;
+}
+
+.connections-menu-button {
+    width: 100%;
+    max-width: 260px;
+    margin: 10px auto 0;
+}
 
 /* GENERAL */
 
@@ -834,5 +912,9 @@ button:hover:not(:disabled) {
     .connections-controls button {
         padding: 12px 10px;
         font-size: 10px;
+    }
+
+    .connections-results {
+        padding: 22px 14px;
     }
 }
