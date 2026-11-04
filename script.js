@@ -13,7 +13,6 @@ let currentRoom = null;
 let roomStartTime = null;
 let timerInterval = null;
 
-
 // FORMAT TIME
 function formatTime(milliseconds) {
     const minutes = Math.floor(milliseconds / 60000);
@@ -26,7 +25,6 @@ function formatTime(milliseconds) {
         String(ms).padStart(3, "0")
     );
 }
-
 
 // SHUFFLE ARRAY
 function shuffleArray(array) {
@@ -42,21 +40,11 @@ function shuffleArray(array) {
     return shuffled;
 }
 
-
 // ENTER A ROOM
 function enterRoom(roomNumber) {
-
-    if (![1, 2, 3].includes(roomNumber)) {
-        return;
-    }
-
-    if (roomTimes[roomNumber] !== undefined) {
-        return;
-    }
-
-    if (currentRoom !== null) {
-        return;
-    }
+    if (![1, 2, 3].includes(roomNumber)) return;
+    if (roomTimes[roomNumber] !== undefined) return;
+    if (currentRoom !== null) return;
 
     currentRoom = roomNumber;
     roomStartTime = Date.now();
@@ -85,7 +73,6 @@ function enterRoom(roomNumber) {
     clearInterval(timerInterval);
 
     timerInterval = setInterval(() => {
-
         if (currentRoom === null || roomStartTime === null) {
             return;
         }
@@ -98,13 +85,11 @@ function enterRoom(roomNumber) {
     }, 30);
 }
 
-
 // ==========================================
 // ROOM 1: DISC MEMORY
 // ==========================================
 
 function initializeDiscMemory() {
-
     const words = [
         "HANDLER",
         "CUTTER",
@@ -120,7 +105,6 @@ function initializeDiscMemory() {
 
     let firstCard = null;
     let secondCard = null;
-
     let lockBoard = false;
     let matches = 0;
     let moves = 0;
@@ -144,7 +128,6 @@ function initializeDiscMemory() {
     const memoryGrid = document.getElementById("memory-grid");
 
     cards.forEach((word) => {
-
         const card = document.createElement("button");
 
         card.className = "memory-card";
@@ -162,9 +145,7 @@ function initializeDiscMemory() {
         memoryGrid.appendChild(card);
     });
 
-
     function flipCard(card) {
-
         if (lockBoard) return;
 
         if (
@@ -191,9 +172,7 @@ function initializeDiscMemory() {
         checkMatch();
     }
 
-
     function checkMatch() {
-
         const isMatch =
             firstCard.dataset.word === secondCard.dataset.word;
 
@@ -204,9 +183,7 @@ function initializeDiscMemory() {
         }
     }
 
-
     function handleMatch() {
-
         firstCard.classList.add("matched");
         secondCard.classList.add("matched");
 
@@ -225,32 +202,24 @@ function initializeDiscMemory() {
         }
     }
 
-
     function handleMismatch() {
-
         lockBoard = true;
 
         setTimeout(() => {
-
             firstCard.classList.remove("flipped");
             secondCard.classList.remove("flipped");
 
             resetTurn();
-
         }, 800);
     }
 
-
     function resetTurn() {
-
         firstCard = null;
         secondCard = null;
         lockBoard = false;
     }
 
-
     function finishDiscMemory() {
-
         roomContent.innerHTML = `
             <div class="memory-complete">
                 <h2>ROOM 01 COMPLETE!</h2>
@@ -264,13 +233,11 @@ function initializeDiscMemory() {
     }
 }
 
-
 // ==========================================
 // ROOM 2: SIMON SAYS
 // ==========================================
 
 function initializeSimonSays() {
-
     const actions = [
         "CUT",
         "DUMP",
@@ -278,19 +245,15 @@ function initializeSimonSays() {
         "HUCK"
     ];
 
-    // Five rounds: 4, 5, 6, 7, and 8 actions
     const totalRounds = 5;
     const startingSequenceLength = 4;
-    const maximumSequenceLength = 8;
 
     let sequence = [];
     let currentRound = 1;
     let playerPosition = 0;
-
     let mistakes = 0;
     let acceptingInput = false;
     let gameStarted = false;
-
     let playbackTimeouts = [];
 
     const roomContent = document.getElementById("room-content");
@@ -352,23 +315,18 @@ function initializeSimonSays() {
     const simonButtons = document.querySelectorAll(".simon-button");
     const startButton = document.getElementById("simon-start");
 
-
     function setStatus(message) {
         document.getElementById("simon-status").textContent =
             message;
     }
 
-
     function setButtonsEnabled(enabled) {
-
         simonButtons.forEach(button => {
             button.disabled = !enabled;
         });
     }
 
-
     function clearPlayback() {
-
         playbackTimeouts.forEach(timeout => {
             clearTimeout(timeout);
         });
@@ -380,9 +338,7 @@ function initializeSimonSays() {
         });
     }
 
-
     function flashAction(action, duration) {
-
         const button = document.querySelector(
             `.simon-button[data-action="${action}"]`
         );
@@ -398,18 +354,14 @@ function initializeSimonSays() {
         playbackTimeouts.push(timeout);
     }
 
-
     function addToSequence() {
-
         const randomAction =
             actions[Math.floor(Math.random() * actions.length)];
 
         sequence.push(randomAction);
     }
 
-
     function updateRoundDisplay() {
-
         document.getElementById("simon-round").textContent =
             `ROUND ${currentRound} OF ${totalRounds}`;
 
@@ -417,10 +369,7 @@ function initializeSimonSays() {
             `${playerPosition} / ${sequence.length} ACTIONS`;
     }
 
-
-    // PLAY THE CURRENT SEQUENCE
     function playSequence() {
-
         clearPlayback();
 
         acceptingInput = false;
@@ -435,7 +384,6 @@ function initializeSimonSays() {
 
         updateRoundDisplay();
 
-        // Playback gets slightly faster as the rounds progress
         const flashDuration =
             Math.max(250, 550 - currentRound * 35);
 
@@ -445,11 +393,9 @@ function initializeSimonSays() {
         let index = 0;
 
         function playNextAction() {
-
             if (index >= sequence.length) {
 
                 const finishTimeout = setTimeout(() => {
-
                     acceptingInput = true;
 
                     setButtonsEnabled(true);
@@ -488,11 +434,9 @@ function initializeSimonSays() {
         playbackTimeouts.push(initialTimeout);
     }
 
-
-    // AUTOMATICALLY START THE NEXT ROUND
     function startNextRound() {
-
         acceptingInput = false;
+
         setButtonsEnabled(false);
 
         startButton.disabled = true;
@@ -502,9 +446,7 @@ function initializeSimonSays() {
             `ROUND ${currentRound} COMPLETE! NEXT ROUND STARTING...`
         );
 
-        // Brief pause, then add one action and play the next sequence
         const nextRoundTimeout = setTimeout(() => {
-
             if (currentRoom !== 2) return;
 
             currentRound++;
@@ -518,12 +460,8 @@ function initializeSimonSays() {
         playbackTimeouts.push(nextRoundTimeout);
     }
 
-
-    // HANDLE PLAYER BUTTON PRESSES
     function handlePlayerInput(action) {
-
         if (!acceptingInput) return;
-
         if (currentRoom !== 2) return;
 
         const expectedAction = sequence[playerPosition];
@@ -539,16 +477,13 @@ function initializeSimonSays() {
             if (playerPosition === sequence.length) {
 
                 acceptingInput = false;
+
                 setButtonsEnabled(false);
 
                 if (currentRound === totalRounds) {
-
                     finishSimonSays();
-
                 } else {
-
                     startNextRound();
-
                 }
             }
 
@@ -568,9 +503,7 @@ function initializeSimonSays() {
 
             setStatus("INCORRECT! WATCH THE SEQUENCE AGAIN.");
 
-            // Replay the same sequence after a mistake
             const retryTimeout = setTimeout(() => {
-
                 if (currentRoom !== 2) return;
 
                 playSequence();
@@ -581,10 +514,7 @@ function initializeSimonSays() {
         }
     }
 
-
-    // FINISH SIMON SAYS
     function finishSimonSays() {
-
         acceptingInput = false;
 
         setButtonsEnabled(false);
@@ -598,13 +528,9 @@ function initializeSimonSays() {
         roomContent.innerHTML = `
             <div class="memory-complete">
                 <h2>ROOM 02 COMPLETE!</h2>
-
                 <p>You successfully completed all five rounds.</p>
-
                 <p>Final sequence: 8 actions</p>
-
                 <p>Mistakes: ${mistakes}</p>
-
                 <p>Returning to room selection...</p>
             </div>
         `;
@@ -612,32 +538,18 @@ function initializeSimonSays() {
         completeRoom(elapsed);
     }
 
-
-    // CONNECT THE FOUR ACTION BUTTONS
     simonButtons.forEach(button => {
-
         button.addEventListener("click", () => {
-
-            const action = button.dataset.action;
-
-            handlePlayerInput(action);
-
+            handlePlayerInput(button.dataset.action);
         });
-
     });
 
-
-    // START GAME OR REWATCH THE CURRENT SEQUENCE
     startButton.addEventListener("click", () => {
-
         if (startButton.disabled) return;
 
-        // First time starting the game
         if (!gameStarted) {
-
             gameStarted = true;
 
-            // Begin with four actions
             for (let i = 0; i < startingSequenceLength; i++) {
                 addToSequence();
             }
@@ -647,24 +559,17 @@ function initializeSimonSays() {
             return;
         }
 
-        // Allow the player to rewatch the current sequence
         if (acceptingInput) {
-
             playSequence();
-
         }
-
     });
-
 }
-
 
 // ==========================================
 // ROOM 3: TEAM CONNECTIONS
 // ==========================================
 
 function initializeTeamConnections() {
-
     const categories = [
         {
             name: "ROOKIES",
@@ -696,7 +601,6 @@ function initializeTeamConnections() {
 
     const roomContent = document.getElementById("room-content");
 
-    // BUILD THE GAME LAYOUT
     roomContent.innerHTML = `
         <div class="connections-panel">
 
@@ -719,27 +623,19 @@ function initializeTeamConnections() {
             <div class="connections-grid" id="connections-grid"></div>
 
             <div class="connections-controls">
-                <button
-                    class="connections-submit"
-                    id="connections-submit"
-                    disabled
-                >
+
+                <button class="connections-submit" id="connections-submit" disabled>
                     SUBMIT
                 </button>
 
-                <button
-                    class="connections-shuffle"
-                    id="connections-shuffle"
-                >
+                <button class="connections-shuffle" id="connections-shuffle">
                     SHUFFLE
                 </button>
 
-                <button
-                    class="connections-deselect"
-                    id="connections-deselect"
-                >
+                <button class="connections-deselect" id="connections-deselect">
                     DESELECT ALL
                 </button>
+
             </div>
 
             <p class="connections-feedback" id="connections-feedback">
@@ -750,6 +646,7 @@ function initializeTeamConnections() {
     `;
 
     const grid = document.getElementById("connections-grid");
+
     const submitButton = document.getElementById("connections-submit");
     const shuffleButton = document.getElementById("connections-shuffle");
     const deselectButton = document.getElementById("connections-deselect");
@@ -763,14 +660,10 @@ function initializeTeamConnections() {
 
     let remainingTiles = shuffleArray(allTiles);
 
-
-    // DRAW THE REMAINING TILES
     function renderTiles() {
-
         grid.innerHTML = "";
 
         remainingTiles.forEach(tile => {
-
             const button = document.createElement("button");
 
             button.className = "connection-tile";
@@ -790,20 +683,14 @@ function initializeTeamConnections() {
         updateControls();
     }
 
-
-    // SELECT OR DESELECT A TILE
     function toggleTile(name) {
-
         if (mistakes >= maxMistakes) return;
 
         if (selectedTiles.includes(name)) {
-
             selectedTiles = selectedTiles.filter(
                 tile => tile !== name
             );
-
         } else {
-
             if (selectedTiles.length >= 4) return;
 
             selectedTiles.push(name);
@@ -812,10 +699,7 @@ function initializeTeamConnections() {
         renderTiles();
     }
 
-
-    // UPDATE BUTTON STATES
     function updateControls() {
-
         submitButton.disabled =
             selectedTiles.length !== 4 ||
             mistakes >= maxMistakes;
@@ -828,14 +712,10 @@ function initializeTeamConnections() {
             mistakes >= maxMistakes;
     }
 
-
-    // CALCULATE THE LARGEST CATEGORY OVERLAP
     function getCommonCount(guess) {
-
         let highestOverlap = 0;
 
         categories.forEach(category => {
-
             const overlap = guess.filter(name =>
                 category.members.includes(name)
             ).length;
@@ -849,44 +729,30 @@ function initializeTeamConnections() {
         return highestOverlap;
     }
 
-
-    // CHECK THE PLAYER'S GUESS
     function submitGuess() {
-
         if (selectedTiles.length !== 4) return;
         if (mistakes >= maxMistakes) return;
 
         const guess = [...selectedTiles];
 
-        // CHECK WHETHER ALL FOUR BELONG TO THE SAME CATEGORY
         const matchedCategory = categories.find(category => {
-
             return guess.every(name =>
                 category.members.includes(name)
             );
-
         });
 
         if (matchedCategory) {
-
             handleCorrectGuess(matchedCategory);
-
         } else {
-
             handleIncorrectGuess(guess);
-
         }
     }
 
-
-    // CORRECT CATEGORY
     function handleCorrectGuess(category) {
-
         const categoryIndex = categories.indexOf(category);
 
         solvedCategories.push(categoryIndex);
 
-        // Remove the four solved tiles
         remainingTiles = remainingTiles.filter(tile =>
             !category.members.includes(tile.name)
         );
@@ -900,19 +766,14 @@ function initializeTeamConnections() {
             `You found: ${category.name}`;
 
         renderSolvedCategories();
-
         renderTiles();
 
-        // Check whether all four categories are solved
         if (solvedCategories.length === 4) {
             finishConnections();
         }
     }
 
-
-    // INCORRECT CATEGORY
     function handleIncorrectGuess(guess) {
-
         mistakes++;
 
         document.getElementById("connections-mistakes").textContent =
@@ -924,12 +785,10 @@ function initializeTeamConnections() {
             "connections-feedback"
         );
 
-        feedback.textContent =
-            `${commonCount} COMMON`;
+        feedback.textContent = `${commonCount} COMMON`;
 
         feedback.classList.remove("connections-feedback-wrong");
 
-        // Restart animation
         void feedback.offsetWidth;
 
         feedback.classList.add("connections-feedback-wrong");
@@ -943,10 +802,7 @@ function initializeTeamConnections() {
         }
     }
 
-
-    // SHOW COMPLETED CATEGORIES
     function renderSolvedCategories() {
-
         const solvedContainer = document.getElementById(
             "connections-solved"
         );
@@ -954,7 +810,6 @@ function initializeTeamConnections() {
         solvedContainer.innerHTML = "";
 
         solvedCategories.forEach(index => {
-
             const category = categories[index];
 
             const categoryBox = document.createElement("div");
@@ -971,14 +826,10 @@ function initializeTeamConnections() {
         });
     }
 
-
-    // SHUFFLE REMAINING TILES
     function shuffleRemainingTiles() {
-
         if (mistakes >= maxMistakes) return;
 
         remainingTiles = shuffleArray(remainingTiles);
-
         selectedTiles = [];
 
         document.getElementById("connections-feedback").textContent =
@@ -987,10 +838,7 @@ function initializeTeamConnections() {
         renderTiles();
     }
 
-
-    // CLEAR SELECTION
     function deselectAll() {
-
         selectedTiles = [];
 
         document.getElementById("connections-feedback").textContent =
@@ -999,10 +847,7 @@ function initializeTeamConnections() {
         renderTiles();
     }
 
-
-    // GAME OVER
     function showConnectionsFailure() {
-
         submitButton.disabled = true;
         shuffleButton.disabled = true;
         deselectButton.disabled = true;
@@ -1035,10 +880,7 @@ function initializeTeamConnections() {
             .addEventListener("click", restartConnections);
     }
 
-
-    // RESTART THE PUZZLE WITHOUT RESETTING THE TIMER
     function restartConnections() {
-
         selectedTiles = [];
         mistakes = 0;
         solvedCategories = [];
@@ -1066,20 +908,12 @@ function initializeTeamConnections() {
         renderTiles();
     }
 
-
-    // COMPLETE THE GAME AND SHOW RESULTS
     function finishConnections() {
-
-        // Capture the final time before stopping the timer
         const elapsed = Date.now() - roomStartTime;
 
-        // Save the room time and stop the timer.
-        // The true argument keeps the player on this screen.
         completeRoom(elapsed, true);
 
-        // Build the completed category results
         const completedCategories = solvedCategories.map(index => {
-
             const category = categories[index];
 
             return `
@@ -1090,7 +924,6 @@ function initializeTeamConnections() {
             `;
         }).join("");
 
-        // Display the Connections results instead of returning to the menu
         roomContent.innerHTML = `
             <div class="connections-results">
 
@@ -1135,31 +968,24 @@ function initializeTeamConnections() {
         `;
     }
 
-
-    // CONNECT BUTTONS
     submitButton.addEventListener("click", submitGuess);
-
     shuffleButton.addEventListener("click", shuffleRemainingTiles);
-
     deselectButton.addEventListener("click", deselectAll);
 
     renderTiles();
 }
-
 
 // ==========================================
 // COMPLETE A ROOM
 // ==========================================
 
 function completeRoom(completionTime, stayOnRoom = false) {
-
     if (currentRoom === null) return;
 
     const elapsed = completionTime !== undefined
         ? completionTime
         : Date.now() - roomStartTime;
 
-    // Save the completed room time
     roomTimes[currentRoom] = elapsed;
 
     sessionStorage.setItem(
@@ -1167,11 +993,9 @@ function completeRoom(completionTime, stayOnRoom = false) {
         JSON.stringify(roomTimes)
     );
 
-    // Stop the timer immediately
     clearInterval(timerInterval);
     timerInterval = null;
 
-    // Show the exact final time on the room screen
     document.getElementById("room-timer").textContent =
         formatTime(elapsed);
 
@@ -1180,24 +1004,18 @@ function completeRoom(completionTime, stayOnRoom = false) {
 
     updateMenu();
 
-    // Connections stays on its results screen.
-    // Other rooms return to the menu as before.
     if (!stayOnRoom) {
-
         setTimeout(() => {
             returnToMenu();
         }, 700);
-
     }
 }
-
 
 // ==========================================
 // RETURN TO MENU
 // ==========================================
 
 function returnToMenu() {
-
     if (currentRoom !== null) {
         alert("Finish the challenge before returning to the menu!");
         return;
@@ -1212,32 +1030,25 @@ function returnToMenu() {
     updateMenu();
 }
 
-
 // ==========================================
 // UPDATE MENU AND ESCAPE BUTTON
 // ==========================================
 
 function updateMenu() {
-
     let totalTime = 0;
 
     for (let i = 1; i <= 3; i++) {
-
         const status = document.getElementById("status-" + i);
         const button = document.getElementById("room-button-" + i);
 
         if (roomTimes[i] !== undefined) {
-
             status.textContent = formatTime(roomTimes[i]);
             status.classList.add("completed");
             button.disabled = true;
-
         } else {
-
             status.textContent = "NOT STARTED";
             status.classList.remove("completed");
             button.disabled = false;
-
         }
 
         if (roomTimes[i] !== undefined) {
@@ -1256,13 +1067,11 @@ function updateMenu() {
         !allComplete;
 }
 
-
 // ==========================================
 // SHOW FINAL RESULTS
 // ==========================================
 
 function showResults() {
-
     const allComplete = [1, 2, 3].every(
         room => roomTimes[room] !== undefined
     );
@@ -1280,7 +1089,6 @@ function showResults() {
     let totalTime = 0;
 
     for (let i = 1; i <= 3; i++) {
-
         const time = roomTimes[i];
 
         totalTime += time;
@@ -1297,30 +1105,24 @@ function showResults() {
         formatTime(totalTime);
 }
 
-
 // ==========================================
 // INSTRUCTIONS POPUP
 // ==========================================
 
 document.getElementById("instructions-button")
     .addEventListener("click", () => {
-
         document.getElementById("instructions-modal")
             .classList.remove("hidden");
-
     });
 
 document.getElementById("close-instructions")
     .addEventListener("click", () => {
-
         document.getElementById("instructions-modal")
             .classList.add("hidden");
-
     });
 
-
 // ==========================================
-// INITIALIZE MENU
+// INITIALIZE
 // ==========================================
 
 updateMenu();
